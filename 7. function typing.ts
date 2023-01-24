@@ -52,5 +52,5 @@ function printOrder6({ title, amount }: any): void {
 }
 
 const aangifteX = { title: 'Aangifte 200793', amount: 100 }
-printOrder(aangifteX);
+printOrder6(aangifteX);
 
