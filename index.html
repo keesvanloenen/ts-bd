@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <my-counter></my-counter>
+    <!-- web component -->
+    <button>Hit me</button>
+
+    <script>
+      class Counter extends HTMLElement {
+        constructor() {
+          super();
+          this.hits = 0;
+        }
+
+        render() {
+          this.textContent = `${this.hits} time(s)`;
+        }
+
+        connectedCallback() {
+          this.render();
+        }
+
+        hit() {
+          console.log('ik ben', this);
+          this.hits++;
+          this.render();
+        }
+      }
+
+      window.customElements.define('my-counter', Counter); // registratie bij de browser
+
+      const counter = document.querySelector('my-counter');
+      // document.querySelector('button').addEventListener('click', counter.hit());
+      document.querySelector('button').addEventListener('click', counter.hit);
+    </script>
+  </body>
+</html>

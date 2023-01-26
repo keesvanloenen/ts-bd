@@ -1,0 +1,99 @@
+const OFFSET_LATIN_CHAR = 55;
+const CHAR_CODE_A = 'A'.charCodeAt(0);
+const CHAR_CODE_Z = 'Z'.charCodeAt(0);
+
+class Iban {
+  constructor(
+    public readonly countryCode: string,
+    public readonly bankCode: string,
+    public readonly accountNumber: string,
+    public readonly controlNumber: string
+  ) {}
+
+  static generate(bankCode: string = 'NL', countryCode: string = 'TYPE'): Iban {
+    const sourceForAccountNumber = Math.floor(Math.random() * 10_000_000_000).toString();
+    const accountNumber = sourceForAccountNumber.padStart(10, '0');
+    const stringToConvert = `${bankCode}${accountNumber}${countryCode}`;
+    const capitalsReplaced = replaceCapitals(stringToConvert);
+    const twoZerosAdded = `${capitalsReplaced}00`;
+    const mod97 = Number(BigInt(twoZerosAdded) % 97n);
+    const controlNumber = String(98 - mod97).padStart(2, '0');
+
+    return new Iban(countryCode, bankCode, accountNumber, controlNumber);
+  }
+}
+
+class Customer {
+  constructor(
+    public firstName: string,
+    public lastName: string,
+    public insertion?: string
+  ) {}
+}
+
+class BankAccount {
+  iban: Iban;
+
+  constructor(public customer: Customer) {
+    this.iban = Iban.generate();
+  }
+
+  toString() {
+    return `[${formatIban(this.iban)}] ${formatName(this.customer)}`;
+  }
+}
+
+function formatName({ firstName, lastName, insertion }: Customer): string {
+  if (insertion) {
+    return `${firstName} ${insertion} ${lastName}`;
+  }
+  return `${firstName} ${lastName}`;
+}
+
+function isCapital(char: string): boolean {
+  const char_code = char.charCodeAt(0);
+  return char_code >= CHAR_CODE_A && char_code <= CHAR_CODE_Z;
+}
+
+function replaceCapitals(value: string): string {
+  return value
+    .split('')
+    .map((char: string) =>
+      isCapital(char) ? String(char.charCodeAt(0) - OFFSET_LATIN_CHAR) : char
+    )
+    .join('');
+}
+
+function formatIban({
+  countryCode,
+  bankCode,
+  accountNumber,
+  controlNumber,
+}: any) {
+  const parts: string[] = [];
+  for (let i = 0; i < accountNumber.length; i += 4) {
+    parts.push(accountNumber.substring(i, i + 4));
+  }
+  const formattedAccountNumber = parts.join(' ');
+  return `${countryCode}${controlNumber} ${bankCode} ${formattedAccountNumber}`;
+}
+
+/* Tests --------------------------------------------------------------------------- */
+
+console.log(
+  formatName({ firstName: 'Pascalle', lastName: 'Vries', insertion: 'de' }) ===
+    'Pascalle de Vries'
+);
+console.log(formatName({ firstName: 'Foo', lastName: 'Bar' }) === 'Foo Bar');
+
+const bankAccounts = [
+  new BankAccount({
+    firstName: 'Alfred',
+    lastName: 'Kwak',
+    insertion: 'Jodocus',
+  }),
+  new BankAccount({ firstName: 'Brad', lastName: 'Pitt' }),
+  new BankAccount({ firstName: 'Jack', lastName: 'Sparrow' }),
+];
+
+bankAccounts.forEach((elem) => console.log(elem.toString()));

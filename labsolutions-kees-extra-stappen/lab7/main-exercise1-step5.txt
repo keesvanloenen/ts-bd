@@ -1,0 +1,88 @@
+class Iban {
+  constructor(
+    public readonly countryCode: string,
+    public readonly bankCode: string,
+    public readonly accountNumber: string,
+    public readonly controlNumber: string
+  ) {}
+
+  format() {
+    const parts: string[] = [];
+    for (let i = 0; i < this.accountNumber.length; i += 4) {
+      parts.push(this.accountNumber.substring(i, i + 4));
+    }
+    const formattedAccountNumber = parts.join(' ');
+    return `${this.countryCode}${this.controlNumber} ${this.bankCode} ${formattedAccountNumber}`;
+  }
+
+  static isCapital(char: string): boolean {
+    const CHAR_CODE_A = 'A'.charCodeAt(0);
+    const CHAR_CODE_Z = 'Z'.charCodeAt(0);
+    
+    const char_code = char.charCodeAt(0);
+    return char_code >= CHAR_CODE_A && char_code <= CHAR_CODE_Z;
+  }
+  
+  static replaceCapitals(value: string): string {
+    const OFFSET_LATIN_CHAR = 55;
+    
+    return value
+      .split('')
+      .map((char: string) =>
+        Iban.isCapital(char) ? String(char.charCodeAt(0) - OFFSET_LATIN_CHAR) : char
+      )
+      .join('');
+  }
+
+  static generate(bankCode: string = 'NL', countryCode: string = 'TYPE'): Iban {
+    const sourceForAccountNumber = Math.floor(Math.random() * 10_000_000_000).toString();
+    const accountNumber = sourceForAccountNumber.padStart(10, '0');
+    const stringToConvert = `${bankCode}${accountNumber}${countryCode}`;
+    const capitalsReplaced = Iban.replaceCapitals(stringToConvert);
+    const twoZerosAdded = `${capitalsReplaced}00`;
+    const mod97 = Number(BigInt(twoZerosAdded) % 97n);
+    const controlNumber = String(98 - mod97).padStart(2, '0');
+
+    return new Iban(countryCode, bankCode, accountNumber, controlNumber);
+  }
+}
+
+class Customer {
+  constructor(
+    public firstName: string,
+    public lastName: string,
+    public insertion?: string
+  ) {}
+
+  format(): string {
+    if (this.insertion) {
+      return `${this.firstName} ${this.insertion} ${this.lastName}`;
+    }
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+
+class BankAccount {
+  iban: Iban;
+
+  constructor(public customer: Customer) {
+    this.iban = Iban.generate();
+  }
+
+  toString() {
+    return `[${this.iban.format()}] ${this.customer.format()}`;
+  }
+}
+
+/* Tests --------------------------------------------------------------------------- */
+
+console.log(new Customer('Pascalle', 'Vries', 'de').format() === 'Pascalle de Vries');
+console.log(new Customer('Foo', 'Bar').format() === 'Foo Bar');
+
+const bankAccounts = [
+  new BankAccount(new Customer('Alfred', 'Kwak', 'Jodocus')),
+  new BankAccount(new Customer('Brad', 'Pitt' )),
+  new BankAccount(new Customer('Jack', 'Sparrow')),
+];
+
+bankAccounts.forEach((elem) => console.log(elem.toString()));
