@@ -1,3 +1,13 @@
+### ✔ receive the bank info
+GET http://localhost:8080/api/bank
+Content-Type: application/json
+
+
+### ✔ receive the accounts
+GET http://localhost:8080/api/accounts
+Content-Type: application/json
+
+
 ### ✔ providing first name and last name
 POST http://localhost:8080/api/customers
 Content-Type: application/json
@@ -7,8 +17,8 @@ Content-Type: application/json
   "lastName": "Bond"
 }
 
-### ✔ providing first name, last name and insertion
 
+### ✔ providing first name, last name and insertion
 POST http://localhost:8080/api/customers
 Content-Type: application/json
 
@@ -18,8 +28,8 @@ Content-Type: application/json
   "insertion": "de"
 }
 
-### ❌ incorrect first name type
 
+### ❌ incorrect first name type
 POST http://localhost:8080/api/customers
 Content-Type: application/json
 
@@ -29,8 +39,8 @@ Content-Type: application/json
   "insertion": "de"
 }
 
-### ❌ incorrect last name type
 
+### ❌ incorrect last name type
 POST http://localhost:8080/api/customers
 Content-Type: application/json
 
@@ -40,8 +50,8 @@ Content-Type: application/json
   "insertion": "de"
 }
 
-### ❌ no first name
 
+### ❌ no first name
 POST http://localhost:8080/api/customers
 Content-Type: application/json
 
@@ -51,7 +61,6 @@ Content-Type: application/json
 
 
 ### ❌ no last name
-
 POST http://localhost:8080/api/customers
 Content-Type: application/json
 
