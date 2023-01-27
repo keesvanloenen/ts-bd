@@ -1,0 +1,60 @@
+### ✔ providing first name and last name
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "James",
+  "lastName": "Bond"
+}
+
+### ✔ providing first name, last name and insertion
+
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "James",
+  "lastName": "Bond",
+  "insertion": "de"
+}
+
+### ❌ incorrect first name type
+
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "firstName": 42,
+  "lastName": "Bond",
+  "insertion": "de"
+}
+
+### ❌ incorrect last name type
+
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "James",
+  "lastName": 42,
+  "insertion": "de"
+}
+
+### ❌ no first name
+
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "lastName": "Only last name"
+}
+
+
+### ❌ no last name
+
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "Only first name"
+}

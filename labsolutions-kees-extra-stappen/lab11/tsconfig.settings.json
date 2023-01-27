@@ -1,0 +1,13 @@
+// The most important options from tsconfig to be extended by other tsconfig.json files (in client, server, shared)
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "composite": true,
+    "declarationMap": true,
+    "declaration": true,
+  }
+}

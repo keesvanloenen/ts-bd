@@ -1,0 +1,38 @@
+/* Alle routing nog in constructor en geen validatie */
+
+import express from 'express';
+import { Bank } from './Bank.js';
+import { Customer } from '../shared/index.js';
+
+export class BankServer {
+  private app: express.Express;
+
+  constructor(private bank: Bank) {
+    this.app = express();
+    this.app.use(express.json());   // accepteer json als input (body-parser is deprecated 😉)
+
+    this.app.get('/api/bank', (req, res) => {
+      res.json(this.bank.config);
+    });
+
+    this.app.get('/api/accounts', (req, res) => {
+      res.json(this.bank.getAccounts());
+    });
+
+    this.app.post('/api/customers', (req, res) => {
+      console.log('server received: ', req.body);
+      const { firstName, lastName } = req.body;
+
+      this.bank.createAccount(new Customer(firstName, lastName));
+      
+      res.status(204).send();
+    });
+  }
+
+  listen() {
+    this.app.listen(this.bank.config.port);
+    console.log(
+      `Bank ${this.bank.config.name} listening on port ${this.bank.config.port}.`
+    );
+  }
+}
