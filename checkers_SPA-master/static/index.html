@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkers</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script src="./script.js" type="module"></script>
+  </head>
+  <body>
+    <h3 id="title-header">Jean Houdt Van Damme!</h3>
+    
+    <form id="name-form">
+      <label for="white-player">White Player</label>
+      <input id="white-player" type="text" />
+      <br>
+      <label for="black-player">Black Player</label>
+      <input id="black-player" type="text" />
+      <br>
+      <button id="start-game" type="submit">Start spel!</button>
+    </form>
+
+    <form id="move-form" hidden>
+      <label for="move-input">New move for ...</label>
+      <!--                                  👇      👇                     👇 rudimentaire client-side validatie -->
+      <input id="move-input" type="text" required pattern="\d\d-\d\d" minlength="5" maxlength="5">
+      <br>
+      <button id="move-submit" type="submit">Zet!</button>
+    </form>
+  </body>
+</html>
